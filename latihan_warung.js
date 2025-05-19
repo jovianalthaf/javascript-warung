@@ -10,7 +10,7 @@ function Person(name, age, saldo) {
   this.saldo = saldo;
 }
 
-const orang1 = new Person("Jovian", 21, 10000);
+const orang1 = new Person("Jovian", 21, 50000);
 
 const menuList = {
   1: { name: "Bakso", harga: 10000 },
@@ -27,6 +27,32 @@ function tampilMenu() {
   console.log("0. Selesai pesan");
   console.log("====================");
 }
+
+function cart() {
+  const count = {};
+  pesanan.forEach((item) => {
+    if (!count[item.name]) {
+      count[item.name] = {
+        harga: item.harga,
+        quantity: 1,
+      };
+      console.log(count);
+    } else {
+      count[item.name].quantity += 1;
+    }
+    console.log("\n=== Pesanan Anda ===");
+    for (const nama in count) {
+    //   const item = count[nama];
+    //   const total = item.harga * item.quantity;
+      console.log(`Nama     : ${nama}`);
+      console.log(`Harga    : ${count[nama].harga}`);
+      console.log(`Quantity : ${count[nama].quantity}`);
+    //   console.log(`Total    : ${total}`);
+      console.log("----------------------");
+    }
+  });
+}
+
 function ringkasanPesanan() {
   const totalHarga = pesanan.reduce((sum, item) => sum + item.harga, 0);
 
@@ -41,11 +67,6 @@ function ringkasanPesanan() {
   console.log("=== Ringkasan Pesanan ===");
 }
 
-function tampilPesanan() {
-  pesanan.forEach((item, index) => {
-    console.log(`Pesanan Anda : ${item.name}`);
-  });
-}
 function tanyaPesanan() {
   tampilMenu();
   rl.question(
@@ -54,14 +75,16 @@ function tanyaPesanan() {
       if (input === "0") {
         if (pesanan.length === 0) {
           console.log("Tidak ada pesanan. Terima kasih :)");
-        } else if (pesanan.length > 0) {
+        } else {
           // saldo sudah dikurangi tiap pesan, jadi tinggal tampilkan ringkasan
           ringkasanPesanan();
         }
         rl.close();
         return;
       } else if (input === "9") {
-        tampilPesanan();
+        cart();
+        tanyaPesanan(); // balik lagi ke pilihan setelah melihat cart
+        return;
       }
       console.log(`Sisa Saldo Anda : ${orang1.saldo}`);
       if (orang1.saldo < menuList.harga) {
